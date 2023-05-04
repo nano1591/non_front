@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: electron-vite-demo
+appId: com.nano_of_nichijou.app
+productName: NanoOfNichijou
 directories:
   buildResources: build
 files:
@@ -13,7 +13,7 @@ asarUnpack:
   - resources/**
 afterSign: build/notarize.js
 win:
-  executableName: electron-vite-demo
+  executableName: NanoOfNichijou
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

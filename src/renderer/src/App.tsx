@@ -1,147 +1,68 @@
-import Versions from './components/Versions'
-import icons from './assets/icons.svg'
-import './assets/tw.css'
+import { createContext } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { PortalDialog2Body } from './components/PortalDialog2Body'
+import { PortalRobotDialog2Body } from './components/PortalRobotDialog2Body'
+import { InfoPage } from './pages/InfoPage'
+import { RegisterPage } from './pages/RegisterPage'
+import { SignInPage } from './pages/SignInPage'
+import { DialogVM, useDialogVM } from './vm/useDialogVM'
+import { UserVM, useUserVM } from './vm/useUserVM'
+import { SettingVM, useSettingVM } from './vm/useSettingVM'
+import { ClientPage } from './pages/ClientPage'
+import { Alert } from './components/Alert'
 
-function App(): JSX.Element {
+export const UserVMContext = createContext<UserVM>({} as any)
+export const DialogVMContext = createContext<DialogVM>({} as any)
+export const SettingVMContext = createContext<SettingVM>({} as any)
+
+export const App = () => {
+  const dialogVM = useDialogVM()
+  const userVM = useUserVM()
+  const settingVM = useSettingVM()
   return (
-    <div className="container">
-      <Versions></Versions>
-      <div className="text-9xl">aaaa</div>
-
-      <svg className="hero-logo" viewBox="0 0 900 300">
-        <use xlinkHref={`${icons}#electron`} />
-      </svg>
-      <h2 className="hero-text">
-        You{"'"}ve successfully created an Electron project with React and TypeScript
-      </h2>
-      <p className="hero-tagline">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-
-      <div className="links">
-        <div className="link-item">
-          <a target="_blank" href="https://evite.netlify.app" rel="noopener noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="link-item link-dot">•</div>
-        <div className="link-item">
-          <a
-            target="_blank"
-            href="https://github.com/alex8088/electron-vite"
-            rel="noopener noreferrer"
-          >
-            Getting Help
-          </a>
-        </div>
-        <div className="link-item link-dot">•</div>
-        <div className="link-item">
-          <a
-            target="_blank"
-            href="https://github.com/alex8088/quick-start/tree/master/packages/create-electron"
-            rel="noopener noreferrer"
-          >
-            create-electron
-          </a>
-        </div>
-      </div>
-
-      <div className="features">
-        <div className="feature-item">
-          <article>
-            <h2 className="title">Configuring</h2>
-            <p className="detail">
-              Config with <span>electron.vite.config.ts</span> and refer to the{' '}
-              <a target="_blank" href="https://evite.netlify.app/config/" rel="noopener noreferrer">
-                config guide
-              </a>
-              .
-            </p>
-          </article>
-        </div>
-        <div className="feature-item">
-          <article>
-            <h2 className="title">HMR</h2>
-            <p className="detail">
-              Edit <span>src/renderer</span> files to test HMR. See{' '}
-              <a
-                target="_blank"
-                href="https://evite.netlify.app/guide/hmr-in-renderer.html"
-                rel="noopener noreferrer"
+    <SettingVMContext.Provider value={settingVM}>
+      <DialogVMContext.Provider value={dialogVM}>
+        <UserVMContext.Provider value={userVM}>
+          <SettingVMContext.Consumer>
+            {(settingVM) => (
+              <div
+                id="app"
+                className="overflow-hidden h-screen w-screen"
+                data-theme={settingVM.theme}
+                data-set-theme={settingVM.theme}
               >
-                docs
-              </a>
-              .
-            </p>
-          </article>
-        </div>
-        <div className="feature-item">
-          <article>
-            <h2 className="title">Hot Reloading</h2>
-            <p className="detail">
-              Run{' '}
-              <span>
-                {"'"}electron-vite dev --watch{"'"}
-              </span>{' '}
-              to enable. See{' '}
-              <a
-                target="_blank"
-                href="https://evite.netlify.app/guide/hot-reloading.html"
-                rel="noopener noreferrer"
-              >
-                docs
-              </a>
-              .
-            </p>
-          </article>
-        </div>
-        <div className="feature-item">
-          <article>
-            <h2 className="title">Debugging</h2>
-            <p className="detail">
-              Check out <span>.vscode/launch.json</span>. See{' '}
-              <a
-                target="_blank"
-                href="https://evite.netlify.app/guide/debugging.html"
-                rel="noopener noreferrer"
-              >
-                docs
-              </a>
-              .
-            </p>
-          </article>
-        </div>
-        <div className="feature-item">
-          <article>
-            <h2 className="title">Source Code Protection</h2>
-            <p className="detail">
-              Supported via built-in plugin <span>bytecodePlugin</span>. See{' '}
-              <a
-                target="_blank"
-                href="https://evite.netlify.app/guide/source-code-protection.html"
-                rel="noopener noreferrer"
-              >
-                docs
-              </a>
-              .
-            </p>
-          </article>
-        </div>
-        <div className="feature-item">
-          <article>
-            <h2 className="title">Packaging</h2>
-            <p className="detail">
-              Use{' '}
-              <a target="_blank" href="https://www.electron.build" rel="noopener noreferrer">
-                electron-builder
-              </a>{' '}
-              and pre-configured to pack your app.
-            </p>
-          </article>
-        </div>
-      </div>
-    </div>
+                <Routes>
+                  <Route path="/" element={<SignInPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/info" element={<InfoPage />} />
+                  <Route path="/client" element={<ClientPage />} />
+                </Routes>
+              </div>
+            )}
+          </SettingVMContext.Consumer>
+          <DialogVMContext.Consumer>
+            {(dialogVM) =>
+              dialogVM.dialogs.map((dialog) => (
+                <PortalDialog2Body dialog={dialog} key={dialog.id} />
+              ))
+            }
+          </DialogVMContext.Consumer>
+          <DialogVMContext.Consumer>
+            {(dialogVM) =>
+              dialogVM.robotDialog && <PortalRobotDialog2Body dialog={dialogVM.robotDialog} />
+            }
+          </DialogVMContext.Consumer>
+          <DialogVMContext.Consumer>
+            {(dialogVM) => (
+              <div className="toast toast-top toast-center w-1/2" id="toast">
+                {dialogVM.alertList.map((alert, index) => (
+                  <Alert alert={alert} key={index} />
+                ))}
+              </div>
+            )}
+          </DialogVMContext.Consumer>
+        </UserVMContext.Provider>
+      </DialogVMContext.Provider>
+    </SettingVMContext.Provider>
   )
 }
-
-export default App

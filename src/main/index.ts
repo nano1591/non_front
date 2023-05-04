@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -7,10 +7,14 @@ function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1000,
-    height: 800,
+    height: 618,
+    resizable: false,
+    title: 'Nano of Nichijou',
+    titleBarStyle: 'hidden',
+    icon,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    // ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -33,6 +37,20 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  ipcMain.on('quit', () => {
+    app.quit()
+  })
+
+  ipcMain.on('app:hide', () => {
+    mainWindow.minimize()
+  })
+
+  ipcMain.on('app:full', () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.restore()
+    } else mainWindow.maximize()
+  })
 }
 
 // This method will be called when Electron has finished
