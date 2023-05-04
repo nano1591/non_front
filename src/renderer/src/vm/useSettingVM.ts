@@ -8,13 +8,22 @@ export const useSettingVM = () => {
     defaultValue: 'light'
   })
 
+  const [isHideCloseDialog, setIsHideCloseDialog] = useLocalStorageState<boolean>(
+    STORAGE_KEY.isHideCloseDialog,
+    { defaultValue: false }
+  )
+
   return {
     theme,
-    setTheme
+    setTheme,
+    isHideCloseDialog,
+    setIsHideCloseDialog
   }
 }
 
 export type SettingVM = {
   theme: Theme
   setTheme: (value: Theme | IFuncUpdater<Theme>) => void
+  isHideCloseDialog: boolean
+  setIsHideCloseDialog: (value: boolean | IFuncUpdater<boolean>) => void
 }

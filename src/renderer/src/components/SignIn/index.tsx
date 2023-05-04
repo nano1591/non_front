@@ -103,7 +103,7 @@ export const SignIn = ({ className }: IProps) => {
         </div>
       </div>
 
-      <label className="label cursor-pointer">
+      <label className="label cursor-pointer w-fit space-x-2">
         <input
           type="checkbox"
           className="checkbox"

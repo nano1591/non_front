@@ -4,6 +4,7 @@ import { ThemeModal } from '../ThemeModal'
 import { nanoid } from 'nanoid'
 import { AcctDrawer, AcctDrawerToggle } from '../AcctDrawer'
 import { SearchModal } from '../SearchModal'
+import { CloseDialog } from '../CloseDialog'
 
 interface IProps {
   children: ReactNode
@@ -48,9 +49,7 @@ export const WindowPage = ({
             <button className="btn btn-ghost rounded-btn" onClick={window.api.full}>
               <span className="material-icons-outlined bg-transparent">crop_din</span>
             </button>
-            <button className="btn btn-ghost rounded-btn" onClick={window.api.quit}>
-              <span className="material-icons-outlined bg-transparent">close</span>
-            </button>
+            <CloseDialog />
           </div>
         </div>
         <div className="contener">{children}</div>

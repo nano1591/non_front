@@ -18,8 +18,10 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
+      // devTools: false
     }
   })
+  mainWindow.setWindowButtonVisibility(false)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
