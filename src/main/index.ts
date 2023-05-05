@@ -3,6 +3,14 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+// function getTrayIcon() {
+//   if (process.platform !== 'darwin') {
+//     // windows
+//     return path.join(__dirname, '../../build/icon.ico')
+//   }
+//   return path.join(__dirname, '../../build/icon.png')
+// }
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({

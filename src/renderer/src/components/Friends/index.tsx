@@ -1,5 +1,5 @@
 import { UserVMContext } from '@renderer/App'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import USER_STATUS from '../../config/userstatus'
 import { useToggle } from 'ahooks'
 import ICON from '../../config/icon'
@@ -33,41 +33,47 @@ export const Friends = () => {
 
 const FriendList = () => {
   const userVM = useContext(UserVMContext)
-  // const WS = useSocket()
+  const WS = useSocket()
+  const [showId, setShowId] = useState(-1)
   return (
     <>
       {userVM.friendList.map((friend, index) => (
         <div
           key={index}
-          className="flex items-center justify-start flex-grow-0 p-2 bg-base-200 rounded-lg btn btn-ghost h-auto text-left flex-nowrap"
+          onClick={() => setShowId((id) => (index === id ? -1 : index))}
+          className="flex flex-col items-center p-2 bg-base-200 rounded-lg btn btn-ghost h-auto text-left flex-nowrap w-full"
         >
-          <div className="avatar">
-            <div className="w-8 rounded-full flex items-center justify-center mr-5">
-              <img src={ICON[friend.icon]} />
+          <div className="flex flex-row justify-start w-full">
+            <div className="avatar items-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                <img src={ICON[friend.icon]} />
+              </div>
+            </div>
+            <div className="flex flex-col flex-grow">
+              <h3 className="text-sm">{friend.username}</h3>
+              <h4 className="text-xs opacity-50">{USER_STATUS[friend.status]}</h4>
             </div>
           </div>
-          <div className="flex flex-col flex-grow">
-            <h3 className="text-sm">{friend.username}</h3>
-            <h4 className="text-xs opacity-50">{USER_STATUS[friend.status]}</h4>
-          </div>
-          {/* TODO 点击弹出菜单 */}
-          {/* {menuId === index ?
+          {index === showId && (
             <>
-              <button className={"btn btn-ghost rounded-btn btn-sm " + (friend.status !== 'room' && " btn-disabled")}
-                onClick={() => { WS.joinRoomFromFriend(friend.username); setMenuId(-1) }}>
-                <span className="material-icons-outlined bg-transparent">sports_kabaddi</span>
-              </button>
-              <button className="btn btn-ghost rounded-btn btn-sm" onClick={() => { WS.deleteFriend(friend.username); setMenuId(-1) }}>
-                <span className="material-icons-outlined bg-transparent">delete</span>
-              </button>
-              <button className="btn btn-ghost rounded-btn btn-sm" onClick={() => setMenuId(-1)}>
-                <span className="material-icons-outlined bg-transparent">do_disturb_on</span>
-              </button>
+              <div className="flex flex-row space-x-4 mt-2 px-4 w-full">
+                <button
+                  className={
+                    'btn btn-ghost rounded-btn btn-sm flex-grow ' +
+                    (friend.status !== 'room' && ' btn-disabled')
+                  }
+                  onClick={() => WS.joinRoomFromFriend(friend.username)}>
+                  <span className="material-icons-outlined bg-transparent">sports_kabaddi</span>
+                </button>
+                <button
+                  className="btn btn-ghost rounded-btn btn-sm  flex-grow"
+                  onClick={() => WS.deleteFriend(friend.username)}
+                >
+                  <span className="material-icons-outlined bg-transparent">delete</span>
+                </button>
+              </div>
             </>
-            : <button className="btn btn-ghost rounded-btn btn-sm" onClick={() => setMenuId(index)}>
-              <span className="material-icons-outlined bg-transparent">more_vert</span>
-            </button>
-          } */}
+          )}
         </div>
       ))}
       {userVM.friendList.length === 0 && <div className="text-sm text-center">当前没有好友</div>}
@@ -88,10 +94,16 @@ const FriendSkips = () => {
           <div className="flex flex-col flex-grow">
             <h3 className="text-sm">{skip.username}</h3>
           </div>
-          <button className="btn btn-ghost rounded-btn btn-sm" onClick={() => WS.sureSkipToOther(skip.username)}>
+          <button
+            className="btn btn-ghost rounded-btn btn-sm"
+            onClick={() => WS.sureSkipToOther(skip.username)}
+          >
             <span className="material-icons-outlined bg-transparent">done</span>
           </button>
-          <button className="btn btn-ghost rounded-btn btn-sm" onClick={() => WS.rejectSkipToOther(skip.username)}>
+          <button
+            className="btn btn-ghost rounded-btn btn-sm"
+            onClick={() => WS.rejectSkipToOther(skip.username)}
+          >
             <span className="material-icons-outlined bg-transparent">close</span>
           </button>
         </div>

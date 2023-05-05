@@ -41,7 +41,7 @@ export const SearchModal = () => {
   return (
     <>
       <label className="btn btn-ghost rounded-btn" htmlFor={modalId}>
-        <span className="material-icons-outlined bg-transparent">group_add</span>
+        <span className="material-icons-outlined bg-transparent">person_add_alt</span>
       </label>
       <ModalWithOutClose id={modalId}>
         <label htmlFor={modalId} className="btn btn-sm btn-ghost absolute right-2 top-5">
@@ -56,7 +56,7 @@ export const SearchModal = () => {
           onChange={(event) => userVM.setSearchKeyWord(event.target.value)}
           value={userVM.searchKeyWord}
         />
-        <div className="flex flex-wrap justify-start gap-2 w-[32rem] h-[12rem] overflow-y-scroll">
+        <div className="flex flex-wrap justify-start gap-2 w-[32rem] max-h-[12rem] min-h-0 h-fit overflow-y-scroll">
           {userVM.searchResultList.map((username) => (
             <div
               key={username}

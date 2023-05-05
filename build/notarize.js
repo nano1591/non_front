@@ -15,7 +15,7 @@ module.exports = async (context) => {
     return
   }
 
-  const appId = 'com.electron.app'
+  const appId = 'com.nano_of_nichijou.app'
 
   const { appOutDir } = context
 
