@@ -1,11 +1,13 @@
-import { UserVMContext } from "@renderer/App"
-import { RoomInfo, RoomMsg, UserInRoom } from "@renderer/types"
-import { useGetState, useSafeState } from "ahooks"
-import { useContext } from "react"
+import { UserVMContext } from '@renderer/App'
+import { RoomInfo, RoomMsg, UserInRoom } from '@renderer/types'
+import { useGetState, useSafeState } from 'ahooks'
+import { useContext } from 'react'
 
 export const useRoomVM = () => {
   const userVM = useContext(UserVMContext)
-  const [askRoomList, setAskRoomList, getAskRoomList] = useGetState<{ info: RoomInfo; fName: string }[]>([])
+  const [askRoomList, setAskRoomList, getAskRoomList] = useGetState<
+    { info: RoomInfo; fName: string }[]
+  >([])
   const [roomInfo, setRoomInfo, getRoomInfo] = useGetState<RoomInfo | null>(null)
   const [roomUserList, setRoomUserList] = useSafeState<UserInRoom[]>([])
   const [roomMsgList, setRoomMsgList, getRoomMsgList] = useGetState<RoomMsg[]>([])

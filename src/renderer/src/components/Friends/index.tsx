@@ -62,7 +62,8 @@ const FriendList = () => {
                     'btn btn-ghost rounded-btn btn-sm flex-grow ' +
                     (friend.status !== 'room' && ' btn-disabled')
                   }
-                  onClick={() => WS.joinRoomFromFriend(friend.username)}>
+                  onClick={() => WS.joinRoomFromFriend(friend.username)}
+                >
                   <span className="material-icons-outlined bg-transparent">sports_kabaddi</span>
                 </button>
                 <button

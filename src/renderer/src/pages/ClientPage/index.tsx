@@ -19,7 +19,7 @@ export const ClientPage = () => {
   }, [])
 
   return (
-    <WindowPage theme acct search>
+    <WindowPage theme acct search roomAskList>
       <div className="w-full h-full flex bg-base-200">
         <div className="flex flex-grow justify-center items-center">
           <button className="btn btn-primary btn-lg">PLAY</button>

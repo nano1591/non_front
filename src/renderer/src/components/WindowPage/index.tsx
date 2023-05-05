@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid'
 import { AcctDrawer, AcctDrawerToggle } from '../AcctDrawer'
 import { SearchModal } from '../SearchModal'
 import { CloseDialog } from '../CloseDialog'
+import { RoomAskList } from '../RoomAskList'
 
 interface IProps {
   children: ReactNode
@@ -13,6 +14,7 @@ interface IProps {
   theme?: boolean
   acct?: boolean
   search?: boolean
+  roomAskList?: boolean
 }
 
 export const WindowPage = ({
@@ -21,7 +23,8 @@ export const WindowPage = ({
   back = false,
   theme = false,
   acct = false,
-  search = false
+  search = false,
+  roomAskList = false
 }: IProps) => {
   const navigate = useNavigate()
   const drawerId = nanoid()
@@ -37,6 +40,7 @@ export const WindowPage = ({
             )}
             {acct && <AcctDrawerToggle id={drawerId} />}
             {search && <SearchModal />}
+            {roomAskList && <RoomAskList />}
           </div>
           <div className="navbar-center">
             <div className="text-center text-3xl font-bold">{title}</div>

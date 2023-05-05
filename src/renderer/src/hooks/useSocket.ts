@@ -73,7 +73,7 @@ export interface ClientToServerEvents {
   /** 解散自己的房间 */
   'room:dissolve': (data: { rid: number }) => void
   /** 更换队伍 */
-  'room:item': (data: { rid: number, itemId: ItemId }) => void
+  'room:item': (data: { rid: number; itemId: ItemId }) => void
 }
 
 let socket: Socket<ServerToClientEvents, ClientToServerEvents> | null = null
@@ -94,37 +94,37 @@ export const useSocket = () => {
   }
 
   const initSocketEvent = () => {
-    socket!.on("connect", () => {
-      const status: UserStatus = "online"
+    socket!.on('connect', () => {
+      const status: UserStatus = 'online'
       // TODO 恢复之前的status
       userVM.setUserInfo((info) => ({ ...info!, status }))
-      console.log("connect socket", userVM.userInfo)
+      console.log('connect socket', userVM.userInfo)
     })
 
-    socket!.on("disconnect", () => {
+    socket!.on('disconnect', () => {
       dialogVM.showDialog({
-        title: "断开连接",
-        msg: "已断开与服务器的连接。",
-        btns: [{ text: "关闭" }],
+        title: '断开连接',
+        msg: '已断开与服务器的连接。',
+        btns: [{ text: '关闭' }],
         onClose: window.api.quit
       })
     })
 
-    socket!.on("friend:notify", userVM.updateFriendList)
-    socket!.on("friend:ask", userVM.askSkipToMe)
-    socket!.on("friend:delete", userVM.deleteFriend)
+    socket!.on('friend:notify', userVM.updateFriendList)
+    socket!.on('friend:ask', userVM.askSkipToMe)
+    socket!.on('friend:delete', userVM.deleteFriend)
 
     socket!.on('me:room:ask', roomVM.askRoomToMe)
     socket!.on('me:room:failed', (data: { info: RoomInfo }) => {
       dialogVM.showDialog({
-        title: "操作失败",
+        title: '操作失败',
         msg: `加入「${data.info.name}」失败。原因可能是房间不存在，或房间已满员。`
       })
     })
     socket!.on('me:room:quit', roomVM.clearRoomState)
     socket!.on('me:room:kickout', (data: { info: RoomInfo }) => {
       dialogVM.showDialog({
-        title: "通知",
+        title: '通知',
         msg: `你已被移出「${data.info.name}」。`,
         onClose: roomVM.clearRoomState
       })
@@ -136,7 +136,7 @@ export const useSocket = () => {
         return roomVM.clearRoomState()
       }
       dialogVM.showDialog({
-        title: "通知",
+        title: '通知',
         msg: `「${data.info.name}」已被解散。`,
         onClose: roomVM.clearRoomState
       })
@@ -153,7 +153,7 @@ export const useSocket = () => {
   /** 改变自己的图标 */
   const changeMeIcon = (icon: number) => {
     socket!.emit('me:icon', { icon })
-    userVM.setUserInfo(info => ({ ...info!, icon }))
+    userVM.setUserInfo((info) => ({ ...info!, icon }))
   }
 
   /** 发送好友申请 */
@@ -236,7 +236,7 @@ export const useSocket = () => {
   /** 把房间内的某人踢出房间 */
   const kickoutOtherOfRoom = (fName: string) => {
     if (!roomVM.roomInfo || !roomVM.isMaster) return
-    socket!.emit("room:kickout", { rid: roomVM.roomInfo.id, fName })
+    socket!.emit('room:kickout', { rid: roomVM.roomInfo.id, fName })
   }
 
   /** 退出房间 */

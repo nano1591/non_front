@@ -5,48 +5,6 @@ import STORAGE_KEY from '../config/storageKey'
 import { useState } from 'react'
 import { friendSkipSort, friendSort } from '@renderer/utils/sort'
 
-// const testList = [
-//   '城市早已沉睡',
-//   '在甜美的虚伪',
-//   '真实就像',
-//   '刺眼的阳光',
-//   '习惯伸手就挡',
-//   '我像火烧在大雨下',
-//   '剩最后微弱的火花',
-//   '看不见国王的新衣裳',
-//   '是否太倔强',
-//   '生活就像一场',
-//   '繁华里的流浪',
-//   '多少欲望',
-//   '像汹涌的浪',
-//   '城市早已沉睡',
-//   '在甜美的虚伪',
-//   '真实就像',
-//   '刺眼的阳光',
-//   '习惯伸手就挡',
-//   '我像火烧在大雨下',
-//   '剩最后微弱的火花',
-//   '看不见国王的新衣裳',
-//   '是否太倔强',
-//   '生活就像一场',
-//   '繁华里的流浪',
-//   '多少欲望',
-//   '像汹涌的浪',
-//   '城市早已沉睡',
-//   '在甜美的虚伪',
-//   '真实就像',
-//   '刺眼的阳光',
-//   '习惯伸手就挡',
-//   '我像火烧在大雨下',
-//   '剩最后微弱的火花',
-//   '看不见国王的新衣裳',
-//   '是否太倔强',
-//   '生活就像一场',
-//   '繁华里的流浪',
-//   '多少欲望',
-//   '像汹涌的浪'
-// ]
-
 export const useUserVM = () => {
   const [userInfo, setUserInfo] = useSafeState<UserInfo>()
   const [defaultSignInfo, saveSignInfo] = useLocalStorageState<UserSignInfo | undefined>(
