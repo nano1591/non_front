@@ -1,8 +1,9 @@
 import { Friend, FriendSkip, UserInfo, UserSignInfo } from '@renderer/types'
-import { useLocalStorageState, useSafeState } from 'ahooks'
+import { useGetState, useLocalStorageState, useSafeState } from 'ahooks'
 import { IFuncUpdater } from 'ahooks/lib/createUseStorageState'
 import STORAGE_KEY from '../config/storageKey'
 import { useState } from 'react'
+import { friendSkipSort, friendSort } from '@renderer/utils/sort'
 
 // const testList = [
 //   '城市早已沉睡',
@@ -56,11 +57,42 @@ export const useUserVM = () => {
     { defaultValue: false }
   )
 
-  const [friendList, setFriendList] = useSafeState<Friend[]>([])
-  const [friendSkipList, setFriendSkipList] = useSafeState<FriendSkip[]>([])
+  const [friendList, setFriendList, getFriendList] = useGetState<Friend[]>([])
+  const [friendSkipList, setFriendSkipList, getFriendSkipList] = useGetState<FriendSkip[]>([])
 
   const [searchKeyWord, setSearchKeyWord] = useState<string>('')
   const [searchResultList, setSearchResultList] = useState<string[]>([])
+
+  const updateFriendList = (data: Friend) => {
+    const oldList = [...getFriendList()]
+    const index = oldList.findIndex((f) => f.id === data.id)
+    if (index === -1) {
+      oldList.push(data)
+    } else {
+      oldList.splice(index, 1, data)
+    }
+    setFriendList(oldList.sort(friendSort))
+  }
+
+  const askSkipToMe = (data: { fName: string }) => {
+    const oldList = [...getFriendSkipList()]
+    oldList.push({
+      username: data.fName,
+      createdAt: new Date().toLocaleString(),
+      updatedAt: new Date().toLocaleString()
+    })
+    setFriendSkipList(oldList.sort(friendSkipSort))
+  }
+
+  const deleteFriend = (data: { fName: string }) => {
+    const oldList = [...getFriendList()]
+    setFriendList(oldList.filter((f) => f.username !== data.fName))
+  }
+
+  const deleteSkip = (fName: string) => {
+    const oldList = [...getFriendSkipList()]
+    setFriendSkipList(oldList.filter((skip) => skip.username !== fName))
+  }
 
   return {
     userInfo,
@@ -76,7 +108,11 @@ export const useUserVM = () => {
     searchKeyWord,
     setSearchKeyWord,
     searchResultList,
-    setSearchResultList
+    setSearchResultList,
+    updateFriendList,
+    askSkipToMe,
+    deleteFriend,
+    deleteSkip
   }
 }
 
@@ -95,4 +131,8 @@ export type UserVM = {
   setSearchKeyWord: React.Dispatch<React.SetStateAction<string>>
   searchResultList: string[]
   setSearchResultList: React.Dispatch<React.SetStateAction<string[]>>
+  updateFriendList: (data: Friend) => void
+  askSkipToMe: (data: { fName: string }) => void
+  deleteFriend: (data: { fName: string }) => void
+  deleteSkip: (fName: string) => void
 }

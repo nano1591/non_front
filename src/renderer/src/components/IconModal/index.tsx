@@ -3,6 +3,7 @@ import { UserVMContext } from '@renderer/App'
 import { ModalWithOutClose } from '../Modal'
 import ICON from '../../config/icon'
 import CONFIG from '../../config'
+import { useSocket } from '@renderer/hooks/useSocket'
 
 interface IProps {
   id: string
@@ -11,8 +12,9 @@ interface IProps {
 export const IconModal = ({ id }: IProps) => {
   const userVM = useContext(UserVMContext)
   const [iconId, setIconId] = useState<number>(userVM.userInfo!.icon)
+  const WS = useSocket()
   const changeIcon = () => {
-    /** TODO 更改图标 */
+    WS.changeMeIcon(iconId)
   }
 
   return (

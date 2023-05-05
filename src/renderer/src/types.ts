@@ -36,6 +36,27 @@ export type ClientConfig = {
 export type Friend = Omit<User, 'account' | 'password'> & { id: number }
 
 export type FriendSkip = {
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 } & Pick<User, 'username'>
+
+export type RoomInfo = {
+  id: number
+  masterId: number
+  name: string
+}
+
+export type ItemId = 0 | 1
+
+export type RoomItem = {
+  id: number
+  index: number
+  itemId: ItemId
+}
+
+export type UserInRoom = Omit<UserInfo, 'status' | 'token'> & Pick<RoomItem, 'index' | 'itemId'>
+
+export type RoomMsg = {
+  type: 'asking' | 'join' | 'reject' | 'kickout' | 'quit'
+  username: string
+}

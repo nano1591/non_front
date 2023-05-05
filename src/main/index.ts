@@ -21,7 +21,7 @@ function createWindow(): void {
       // devTools: false
     }
   })
-  mainWindow.setWindowButtonVisibility(false)
+  // mainWindow.setWindowButtonVisibility(false)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
