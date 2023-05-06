@@ -1,12 +1,4 @@
-import {
-  ClientConfig,
-  Friend,
-  FriendSkip,
-  ServiceResult,
-  UserInfo,
-  UserRegisterInfo,
-  UserSignInfo
-} from '@renderer/types'
+import { ClientConfig, Friend, FriendSkip, ServiceResult, UserInfo, UserRegisterInfo, UserSignInfo } from '@renderer/types'
 import URL from '../config/url'
 import { IDialog } from '@renderer/vm/useDialogVM'
 import axios from 'axios'
@@ -34,10 +26,7 @@ export const useService = () => {
     return axios.request<T, R>({ url, method, headers, data })
   }
 
-  const errorHandler = async <T>(
-    serviceFun: () => Promise<T>,
-    options?: Options
-  ): Promise<ServiceResult<T>> => {
+  const errorHandler = async <T>(serviceFun: () => Promise<T>, options?: Options): Promise<ServiceResult<T>> => {
     try {
       const result: any = await serviceFun()
       return { result: result.data.data }

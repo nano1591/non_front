@@ -31,7 +31,9 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-var-requires': 'off',
-    '@typescript-eslint/no-unnecessary-type-constraint': 'off'
+    '@typescript-eslint/no-unnecessary-type-constraint': 'off',
+    'max-len': ['error', { code: 300 }],
+    'prettier/prettier': 'off'
   },
   settings: {
     react: {

@@ -39,7 +39,6 @@ export type ServerToClientEvents = {
   /** 房间的新况 */
   'room:list': (data: { info: RoomInfo; list: UserInRoom[] }) => void
 }
-
 export interface ClientToServerEvents {
   /** 更换图标 */
   'me:icon': (data: { icon: number }) => void
@@ -83,6 +82,8 @@ export const useSocket = () => {
   const dialogVM = useContext(DialogVMContext)
   const roomVM = useContext(RoomVMContext)
 
+  const isMaster = userVM.userInfo?.id === roomVM.roomInfo?.masterId
+
   const initSocket = () => {
     if (socket) return
     socket = io(CONFIG.socketBaseUrl, {
@@ -96,7 +97,6 @@ export const useSocket = () => {
   const initSocketEvent = () => {
     socket!.on('connect', () => {
       const status: UserStatus = 'online'
-      // TODO 恢复之前的status
       userVM.setUserInfo((info) => ({ ...info!, status }))
       console.log('connect socket', userVM.userInfo)
     })
@@ -110,7 +110,9 @@ export const useSocket = () => {
       })
     })
 
-    socket!.on('friend:notify', userVM.updateFriendList)
+    socket!.on('friend:notify', (data: Friend) => {
+      userVM.updateFriendList(data, () => dialogVM.showAlert({ type: 'success', msg: `已和「${data.username}」成为好友。` }))
+    })
     socket!.on('friend:ask', userVM.askSkipToMe)
     socket!.on('friend:delete', userVM.deleteFriend)
 
@@ -121,7 +123,10 @@ export const useSocket = () => {
         msg: `加入「${data.info.name}」失败。原因可能是房间不存在，或房间已满员。`
       })
     })
-    socket!.on('me:room:quit', roomVM.clearRoomState)
+    socket!.on('me:room:quit', () => {
+      roomVM.clearRoomState()
+      userVM.setUserInfo((info) => ({ ...info!, status: 'online' }))
+    })
     socket!.on('me:room:kickout', (data: { info: RoomInfo }) => {
       dialogVM.showDialog({
         title: '通知',
@@ -130,6 +135,7 @@ export const useSocket = () => {
       })
     })
     socket!.on('me:room:dissolve', (data: { info: RoomInfo }) => {
+      userVM.setUserInfo((info) => ({ ...info!, status: 'online' }))
       // 自己解散的
       if (data.info.masterId === userVM.userInfo?.id) {
         dialogVM.showAlert({ type: 'success', msg: `你已解散「${data.info.name}」。` })
@@ -147,7 +153,12 @@ export const useSocket = () => {
     socket!.on('room:quit', roomVM.quitRoomFromOther)
     socket!.on('room:kickout', roomVM.kickoutOtherOfRoom)
     socket!.on('room:join', roomVM.jointRoomFromOther)
-    socket!.on('room:list', roomVM.roomUpdate)
+    socket!.on('room:list', (data: { info: RoomInfo; list: UserInRoom[] }) => {
+      if (data.info) {
+        userVM.setUserInfo((info) => ({ ...info!, status: 'room' }))
+      }
+      roomVM.roomUpdate(data)
+    })
   }
 
   /** 改变自己的图标 */
@@ -158,6 +169,9 @@ export const useSocket = () => {
 
   /** 发送好友申请 */
   const askSkipToOther = (fName: string) => {
+    if (userVM.friendSkipList.find((f) => f.username === fName)) {
+      userVM.setFriendSkipList((skips) => skips.filter((skip) => skip.username !== fName))
+    }
     socket!.emit('friend:ask', { fName })
   }
 
@@ -191,7 +205,8 @@ export const useSocket = () => {
 
   /** 更改房间名 */
   const renameRoom = (rName: string) => {
-    if (!roomVM.roomInfo || !roomVM.isMaster) return
+    console.log('renameRoom', roomVM.roomInfo, isMaster)
+    if (!roomVM.roomInfo || !isMaster) return
     socket!.emit('room:rename', {
       rid: roomVM.roomInfo.id,
       rName
@@ -200,7 +215,7 @@ export const useSocket = () => {
 
   /** 更换房主 */
   const reMasterRoom = (mid: number) => {
-    if (!roomVM.roomInfo || !roomVM.isMaster) return
+    if (!roomVM.roomInfo || !isMaster) return
     socket!.emit('room:master', {
       rid: roomVM.roomInfo.id,
       masterId: mid
@@ -235,7 +250,7 @@ export const useSocket = () => {
 
   /** 把房间内的某人踢出房间 */
   const kickoutOtherOfRoom = (fName: string) => {
-    if (!roomVM.roomInfo || !roomVM.isMaster) return
+    if (!roomVM.roomInfo || !isMaster) return
     socket!.emit('room:kickout', { rid: roomVM.roomInfo.id, fName })
   }
 
@@ -248,9 +263,10 @@ export const useSocket = () => {
 
   /** 解散房间 */
   const dissolveRoom = () => {
-    if (!roomVM.roomInfo || !roomVM.isMaster) return
+    if (!roomVM.roomInfo || !isMaster) return
     socket!.emit('room:dissolve', { rid: roomVM.roomInfo.id })
     roomVM.clearRoomState()
+    userVM.setUserInfo((info) => ({ ...info!, status: 'online' }))
   }
 
   /** 更换队伍 */
@@ -260,6 +276,7 @@ export const useSocket = () => {
   }
 
   return {
+    isMaster,
     initSocket,
     changeMeIcon,
     askSkipToOther,

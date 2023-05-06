@@ -11,10 +11,7 @@ export const Me = () => {
   const iconModalId = nanoid()
   return (
     <div className="w-64 h-32 flex flex-row items-center p-5 shadow-xl bg-base-200 rounded-br-lg rounded-bl-lg">
-      <label
-        htmlFor={iconModalId}
-        className="avatar rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2 mr-5 btn btn-ghost btn-circle"
-      >
+      <label htmlFor={iconModalId} className="avatar rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2 mr-5 btn btn-ghost btn-circle">
         <div className="w-12 rounded-full flex items-center justify-center">
           <img src={ICON[userVM.userInfo!.icon]} />
         </div>

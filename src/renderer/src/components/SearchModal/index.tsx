@@ -4,12 +4,14 @@ import { nanoid } from 'nanoid'
 import { ModalWithOutClose } from '../Modal'
 import { useService } from '@renderer/hooks/useService'
 import { useDebounceEffect } from 'ahooks'
+import { useSocket } from '@renderer/hooks/useSocket'
 
 export const SearchModal = () => {
   const userVM = useContext(UserVMContext)
   const dialogVM = useContext(DialogVMContext)
   const modalId = nanoid()
   const S = useService()
+  const WS = useSocket()
 
   const searchUser = async (keyword: string) => {
     const { result, error } = await S.searchUser({ keyword }, { hideErrorDialog: true })
@@ -34,7 +36,7 @@ export const SearchModal = () => {
     if (userVM.friendList.find((friend) => friend.username === username)) {
       return dialogVM.showAlert({ type: 'warning', msg: '好友关系已存在！' })
     }
-    /** TODO 发送好友请求 */
+    WS.askSkipToOther(username)
     dialogVM.showAlert({ type: 'info', msg: `已向「${username}」发送好友请求。` })
   }
 
@@ -44,9 +46,6 @@ export const SearchModal = () => {
         <span className="material-icons-outlined bg-transparent">person_add_alt</span>
       </label>
       <ModalWithOutClose id={modalId}>
-        <label htmlFor={modalId} className="btn btn-sm btn-ghost absolute right-2 top-5">
-          <span className="material-icons-outlined bg-transparent">close</span>
-        </label>
         <h3 className="text-lg font-bold">添加好友</h3>
         <input
           id="username"
@@ -58,11 +57,7 @@ export const SearchModal = () => {
         />
         <div className="flex flex-wrap justify-start gap-2 w-[32rem] max-h-[12rem] min-h-0 h-fit overflow-y-scroll">
           {userVM.searchResultList.map((username) => (
-            <div
-              key={username}
-              onClick={() => onClickUser(username)}
-              className="flex items-center p-2 bg-base-200 rounded-lg  btn btn-ghost text-left flex-nowrap text-sm"
-            >
+            <div key={username} onClick={() => onClickUser(username)} className="flex items-center p-2 bg-base-200 rounded-lg  btn btn-ghost text-left flex-nowrap text-sm">
               {username}
             </div>
           ))}

@@ -17,15 +17,7 @@ interface IProps {
   roomAskList?: boolean
 }
 
-export const WindowPage = ({
-  children,
-  title = 'Nano of Nichijou',
-  back = false,
-  theme = false,
-  acct = false,
-  search = false,
-  roomAskList = false
-}: IProps) => {
+export const WindowPage = ({ children, title = 'Nano of Nichijou', back = false, theme = false, acct = false, search = false, roomAskList = false }: IProps) => {
   const navigate = useNavigate()
   const drawerId = nanoid()
   return (

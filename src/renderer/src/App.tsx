@@ -29,12 +29,7 @@ export const App = () => {
           <RoomVMContext.Provider value={roomVM}>
             <SettingVMContext.Consumer>
               {(settingVM) => (
-                <div
-                  id="app"
-                  className="overflow-hidden h-screen w-screen"
-                  data-theme={settingVM.theme}
-                  data-set-theme={settingVM.theme}
-                >
+                <div id="app" className="overflow-hidden h-screen w-screen" data-theme={settingVM.theme} data-set-theme={settingVM.theme}>
                   <Routes>
                     <Route path="/" element={<SignInPage />} />
                     <Route path="/register" element={<RegisterPage />} />
@@ -44,18 +39,8 @@ export const App = () => {
                 </div>
               )}
             </SettingVMContext.Consumer>
-            <DialogVMContext.Consumer>
-              {(dialogVM) =>
-                dialogVM.dialogs.map((dialog) => (
-                  <PortalDialog2Body dialog={dialog} key={dialog.id} />
-                ))
-              }
-            </DialogVMContext.Consumer>
-            <DialogVMContext.Consumer>
-              {(dialogVM) =>
-                dialogVM.robotDialog && <PortalRobotDialog2Body dialog={dialogVM.robotDialog} />
-              }
-            </DialogVMContext.Consumer>
+            <DialogVMContext.Consumer>{(dialogVM) => dialogVM.dialogs.map((dialog) => <PortalDialog2Body dialog={dialog} key={dialog.id} />)}</DialogVMContext.Consumer>
+            <DialogVMContext.Consumer>{(dialogVM) => dialogVM.robotDialog && <PortalRobotDialog2Body dialog={dialogVM.robotDialog} />}</DialogVMContext.Consumer>
             <DialogVMContext.Consumer>
               {(dialogVM) => (
                 <div className="toast toast-top toast-center w-1/2" id="toast">

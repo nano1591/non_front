@@ -1,18 +1,14 @@
-import { UserVMContext } from '@renderer/App'
 import { RoomInfo, RoomMsg, UserInRoom } from '@renderer/types'
+import { roomUserSort } from '@renderer/utils/sort'
 import { useGetState, useSafeState } from 'ahooks'
-import { useContext } from 'react'
 
 export const useRoomVM = () => {
-  const userVM = useContext(UserVMContext)
-  const [askRoomList, setAskRoomList, getAskRoomList] = useGetState<
-    { info: RoomInfo; fName: string }[]
-  >([])
+  const [askRoomList, setAskRoomList, getAskRoomList] = useGetState<{ info: RoomInfo; fName: string }[]>([])
   const [roomInfo, setRoomInfo, getRoomInfo] = useGetState<RoomInfo | null>(null)
   const [roomUserList, setRoomUserList] = useSafeState<UserInRoom[]>([])
   const [roomMsgList, setRoomMsgList, getRoomMsgList] = useGetState<RoomMsg[]>([])
 
-  const isMaster = getRoomInfo()?.id === userVM?.userInfo
+  const roomItem = [roomUserList.filter((user) => user.itemId === 0).sort(roomUserSort), roomUserList.filter((user) => user.itemId === 1).sort(roomUserSort)] as const
 
   const clearRoomState = () => {
     setRoomInfo(null)
@@ -26,49 +22,25 @@ export const useRoomVM = () => {
     setAskRoomList(oldList)
   }
 
-  const askRoomToOther = (data: { info: RoomInfo; fName: string }) => {
-    if (data.info.id !== getRoomInfo()?.id) return
+  const updateRoomMsgList = (rid: number, newMsg: Omit<RoomMsg, 'time'>) => {
+    if (rid !== getRoomInfo()?.id) return
     const oldList = [...getRoomMsgList()]
-    oldList.push({ type: 'asking', username: data.fName })
+    oldList.unshift({ ...newMsg, time: new Date().toLocaleTimeString() })
     setRoomMsgList(oldList)
   }
 
-  const rejectRoomFromOther = (data: { info: RoomInfo; fName: string }) => {
-    if (data.info.id !== getRoomInfo()?.id) return
-    const oldList = [...getRoomMsgList()]
-    setRoomMsgList(
-      oldList.map((v) => (v.username === data.fName ? { type: 'reject', username: data.fName } : v))
-    )
-  }
+  const askRoomToOther = (data: { info: RoomInfo; fName: string }) => updateRoomMsgList(data.info.id, { type: 'asking', username: data.fName })
 
-  const jointRoomFromOther = (data: { info: RoomInfo; fName: string }) => {
-    if (data.info.id !== getRoomInfo()?.id) return
-    const oldList = [...getRoomMsgList()]
-    setRoomMsgList(
-      oldList.map((v) => (v.username === data.fName ? { type: 'join', username: data.fName } : v))
-    )
-  }
+  const rejectRoomFromOther = (data: { info: RoomInfo; fName: string }) => updateRoomMsgList(data.info.id, { type: 'reject', username: data.fName })
 
-  const quitRoomFromOther = (data: { info: RoomInfo; fName: string }) => {
-    if (data.info.id !== getRoomInfo()?.id) return
-    const oldList = [...getRoomMsgList()]
-    setRoomMsgList(
-      oldList.map((v) => (v.username === data.fName ? { type: 'quit', username: data.fName } : v))
-    )
-  }
+  const jointRoomFromOther = (data: { info: RoomInfo; fName: string }) => updateRoomMsgList(data.info.id, { type: 'join', username: data.fName })
 
-  const kickoutOtherOfRoom = (data: { info: RoomInfo; fName: string }) => {
-    if (data.info.id !== getRoomInfo()?.id) return
-    const oldList = [...getRoomMsgList()]
-    setRoomMsgList(
-      oldList.map((v) =>
-        v.username === data.fName ? { type: 'kickout', username: data.fName } : v
-      )
-    )
-  }
+  const quitRoomFromOther = (data: { info: RoomInfo; fName: string }) => updateRoomMsgList(data.info.id, { type: 'quit', username: data.fName })
+
+  const kickoutOtherOfRoom = (data: { info: RoomInfo; fName: string }) => updateRoomMsgList(data.info.id, { type: 'kickout', username: data.fName })
 
   const roomUpdate = (data: { info: RoomInfo; list: UserInRoom[] }) => {
-    if (data.info.id !== getRoomInfo()?.id) return
+    console.log('roomUpdate', data)
     setRoomInfo(data.info)
     setRoomUserList(data.list)
   }
@@ -82,8 +54,8 @@ export const useRoomVM = () => {
     askRoomList,
     roomInfo,
     roomUserList,
+    roomItem,
     roomMsgList,
-    isMaster,
     clearRoomState,
     askRoomToMe,
     askRoomToOther,
@@ -92,7 +64,8 @@ export const useRoomVM = () => {
     jointRoomFromOther,
     kickoutOtherOfRoom,
     roomUpdate,
-    deleteRoomAsk
+    deleteRoomAsk,
+    updateRoomMsgList
   }
 }
 
@@ -100,8 +73,8 @@ export type RoomVM = {
   askRoomList: { info: RoomInfo; fName: string }[]
   roomInfo: RoomInfo | null
   roomUserList: UserInRoom[]
+  roomItem: readonly [UserInRoom[], UserInRoom[]]
   roomMsgList: RoomMsg[]
-  isMaster: boolean
   clearRoomState: () => void
   askRoomToMe: (data: { info: RoomInfo; fName: string }) => void
   askRoomToOther: (data: { info: RoomInfo; fName: string }) => void
@@ -111,4 +84,5 @@ export type RoomVM = {
   kickoutOtherOfRoom: (data: { info: RoomInfo; fName: string }) => void
   roomUpdate: (data: { info: RoomInfo; list: UserInRoom[] }) => void
   deleteRoomAsk: (rid: number) => void
+  updateRoomMsgList: (rid: number, newMsg: Omit<RoomMsg, 'time'>) => void
 }

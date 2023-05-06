@@ -21,11 +21,7 @@ export const Register = ({ className }: IProps) => {
   const [showPwd, { toggle: toggleShowPwd }] = useBoolean(false)
   const [showRePwd, { toggle: toggleShowRePwd }] = useBoolean(false)
 
-  const disabled =
-    !check6_16Word(account) ||
-    !check6_16Word(password) ||
-    !check6_16Name(username) ||
-    password !== rePwd
+  const disabled = !check6_16Word(account) || !check6_16Word(password) || !check6_16Name(username) || password !== rePwd
 
   const S = useService()
   const { loading, runAsync: register } = useRequest(
@@ -47,27 +43,13 @@ export const Register = ({ className }: IProps) => {
     <div className={'flex flex-col ' + className}>
       <div className={'form-control flex flex-col space-y-2'}>
         <div className="flex flex-row space-x-2 items-center w-full">
-          <input
-            id="account"
-            placeholder="账号"
-            type="text"
-            className="input input-bordered w-full max-w-lg flex-1"
-            onChange={(event) => setAcct(event.target.value)}
-            value={account}
-          />
+          <input id="account" placeholder="账号" type="text" className="input input-bordered w-full max-w-lg flex-1" onChange={(event) => setAcct(event.target.value)} value={account} />
           <div className="tooltip tooltip-right material-icons-outlined" data-tip={TIP['6_16word']}>
             info
           </div>
         </div>
         <div className="flex flex-row space-x-2 items-center w-full">
-          <input
-            id="username"
-            placeholder="游戏昵称"
-            type="text"
-            className="input input-bordered w-full max-w-lg flex-1"
-            onChange={(event) => setName(event.target.value)}
-            value={username}
-          />
+          <input id="username" placeholder="游戏昵称" type="text" className="input input-bordered w-full max-w-lg flex-1" onChange={(event) => setName(event.target.value)} value={username} />
           <div className="tooltip tooltip-right material-icons-outlined" data-tip={TIP['6_16name']}>
             info
           </div>
@@ -84,9 +66,7 @@ export const Register = ({ className }: IProps) => {
             />
             <label className="btn btn-circle swap swap-rotate">
               <input type="checkbox" checked={showPwd} onClick={toggleShowPwd} />
-              <span className="swap-off material-icons-outlined bg-transparent">
-                visibility_off
-              </span>
+              <span className="swap-off material-icons-outlined bg-transparent">visibility_off</span>
               <span className="swap-on material-icons-outlined  bg-transparent">visibility</span>
             </label>
           </div>
@@ -106,9 +86,7 @@ export const Register = ({ className }: IProps) => {
             />
             <label className="btn btn-circle swap swap-rotate">
               <input type="checkbox" checked={showRePwd} onClick={toggleShowRePwd} />
-              <span className="swap-off material-icons-outlined bg-transparent">
-                visibility_off
-              </span>
+              <span className="swap-off material-icons-outlined bg-transparent">visibility_off</span>
               <span className="swap-on material-icons-outlined  bg-transparent">visibility</span>
             </label>
           </div>
@@ -118,13 +96,7 @@ export const Register = ({ className }: IProps) => {
         </div>
       </div>
 
-      <button
-        onClick={onRegister}
-        disabled={disabled}
-        className={
-          'btn  btn-accent mt-5' + (loading ? ' loading' : '') + (disabled ? ' btn-disabled' : '')
-        }
-      >
+      <button onClick={onRegister} disabled={disabled} className={'btn  btn-accent mt-5' + (loading ? ' loading' : '') + (disabled ? ' btn-disabled' : '')}>
         注册
       </button>
     </div>

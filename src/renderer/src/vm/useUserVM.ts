@@ -6,14 +6,9 @@ import { useState } from 'react'
 import { friendSkipSort, friendSort } from '@renderer/utils/sort'
 
 export const useUserVM = () => {
-  const [userInfo, setUserInfo] = useSafeState<UserInfo>()
-  const [defaultSignInfo, saveSignInfo] = useLocalStorageState<UserSignInfo | undefined>(
-    STORAGE_KEY.signInfo
-  )
-  const [isSaveSignInfo, setIsSaveSignInfo] = useLocalStorageState<boolean>(
-    STORAGE_KEY.isSaveSignInfo,
-    { defaultValue: false }
-  )
+  const [userInfo, setUserInfo] = useSafeState<UserInfo | undefined>(undefined)
+  const [defaultSignInfo, saveSignInfo] = useLocalStorageState<UserSignInfo | undefined>(STORAGE_KEY.signInfo)
+  const [isSaveSignInfo, setIsSaveSignInfo] = useLocalStorageState<boolean>(STORAGE_KEY.isSaveSignInfo, { defaultValue: false })
 
   const [friendList, setFriendList, getFriendList] = useGetState<Friend[]>([])
   const [friendSkipList, setFriendSkipList, getFriendSkipList] = useGetState<FriendSkip[]>([])
@@ -21,11 +16,12 @@ export const useUserVM = () => {
   const [searchKeyWord, setSearchKeyWord] = useState<string>('')
   const [searchResultList, setSearchResultList] = useState<string[]>([])
 
-  const updateFriendList = (data: Friend) => {
+  const updateFriendList = (data: Friend, newFriendCB: () => void) => {
     const oldList = [...getFriendList()]
     const index = oldList.findIndex((f) => f.id === data.id)
     if (index === -1) {
       oldList.push(data)
+      newFriendCB()
     } else {
       oldList.splice(index, 1, data)
     }
@@ -89,7 +85,7 @@ export type UserVM = {
   setSearchKeyWord: React.Dispatch<React.SetStateAction<string>>
   searchResultList: string[]
   setSearchResultList: React.Dispatch<React.SetStateAction<string[]>>
-  updateFriendList: (data: Friend) => void
+  updateFriendList: (data: Friend, newFriendCB: () => void) => void
   askSkipToMe: (data: { fName: string }) => void
   deleteFriend: (data: { fName: string }) => void
   deleteSkip: (fName: string) => void

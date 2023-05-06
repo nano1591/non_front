@@ -19,10 +19,7 @@ export const ThemeModal = () => {
             {THEMES.map((theme) => (
               <button
                 data-theme={theme}
-                className={
-                  'bg-base-100 rounded-lg h-10 w-40 m-2 p-2 ' +
-                  (settingVM.theme === theme ? 'border-accent border-2' : '')
-                }
+                className={'bg-base-100 rounded-lg h-10 w-40 m-2 p-2 ' + (settingVM.theme === theme ? 'border-accent border-2' : '')}
                 onClick={() => settingVM.setTheme(theme)}
                 key={theme}
               >

@@ -8,10 +8,7 @@ export const useSettingVM = () => {
     defaultValue: 'light'
   })
 
-  const [isHideCloseDialog, setIsHideCloseDialog] = useLocalStorageState<boolean>(
-    STORAGE_KEY.isHideCloseDialog,
-    { defaultValue: false }
-  )
+  const [isHideCloseDialog, setIsHideCloseDialog] = useLocalStorageState<boolean>(STORAGE_KEY.isHideCloseDialog, { defaultValue: false })
 
   return {
     theme,

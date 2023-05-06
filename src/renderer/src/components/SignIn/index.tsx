@@ -70,14 +70,7 @@ export const SignIn = ({ className }: IProps) => {
   return (
     <div className={'form-control flex flex-col space-y-2 ' + className}>
       <div className="flex flex-row space-x-2 items-center w-full">
-        <input
-          id="account"
-          placeholder="账号"
-          type="text"
-          className="input input-bordered w-full max-w-lg flex-1"
-          onChange={(event) => setAcct(event.target.value)}
-          value={account}
-        />
+        <input id="account" placeholder="账号" type="text" className="input input-bordered w-full max-w-lg flex-1" onChange={(event) => setAcct(event.target.value)} value={account} />
         <div className="tooltip tooltip-right material-icons-outlined" data-tip={TIP['6_16word']}>
           info
         </div>
@@ -104,20 +97,11 @@ export const SignIn = ({ className }: IProps) => {
       </div>
 
       <label className="label cursor-pointer w-fit space-x-2">
-        <input
-          type="checkbox"
-          className="checkbox"
-          checked={isSaveSignInfo}
-          onChange={toggleSaveSignInfo}
-        />
+        <input type="checkbox" className="checkbox" checked={isSaveSignInfo} onChange={toggleSaveSignInfo} />
         <span className="label-text">保存账号密码</span>
       </label>
 
-      <button
-        onClick={onSignIn}
-        disabled={disabled}
-        className={'btn' + (loading ? ' loading' : '') + (disabled ? ' btn-disabled' : '')}
-      >
+      <button onClick={onSignIn} disabled={disabled} className={'btn' + (loading ? ' loading' : '') + (disabled ? ' btn-disabled' : '')}>
         登录
       </button>
     </div>

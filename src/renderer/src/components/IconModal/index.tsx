@@ -19,9 +19,6 @@ export const IconModal = ({ id }: IProps) => {
 
   return (
     <ModalWithOutClose id={id} scroll={false}>
-      <label htmlFor={id} className="btn btn-sm btn-ghost absolute right-2 top-5">
-        <span className="material-icons-outlined bg-transparent">close</span>
-      </label>
       <h3 className="text-lg font-bold">更换头像</h3>
       <div className="flex flex-row mt-5 w-[30rem]">
         <div className="flex flex-col pr-5 h-min">
@@ -36,15 +33,7 @@ export const IconModal = ({ id }: IProps) => {
         </div>
         <div className="flex flex-wrap justify-start gap-2 p-[5px] h-[20rem] overflow-y-scroll ">
           {Array.from({ length: CONFIG.iconCount }).map((_, index) => (
-            <div
-              key={index}
-              className={
-                'avatar ' +
-                (index + 1 === iconId &&
-                  'rounded ring ring-primary ring-offset-base-100 ring-offset-2')
-              }
-              onClick={() => setIconId(index + 1)}
-            >
+            <div key={index} className={'avatar ' + (index + 1 === iconId && 'rounded ring ring-primary ring-offset-base-100 ring-offset-2')} onClick={() => setIconId(index + 1)}>
               <div className="w-16 h-16 rounded">
                 <img src={ICON[index + 1]} />
               </div>

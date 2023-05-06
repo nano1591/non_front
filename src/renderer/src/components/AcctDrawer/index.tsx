@@ -13,7 +13,7 @@ export const AcctDrawer = ({ id, show, children }: IProps) => {
   return (
     <div className="drawer">
       <input id={id} type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">{children}</div>
+      <div className="drawer-content w-full h-full overflow-hidden">{children}</div>
       {show && (
         <div className="drawer-side">
           <label htmlFor={id} className="drawer-overlay"></label>
@@ -35,9 +35,7 @@ export const AcctDrawerToggle = ({ id }: { id: string }) => {
   return (
     <label htmlFor={id} className="drawer-button btn btn-ghost rounded-btn">
       <div className="indicator">
-        {skipAskCount !== 0 && (
-          <span className="indicator-item badge badge-secondary">{skipAskCount}</span>
-        )}
+        {skipAskCount !== 0 && <span className="indicator-item badge badge-secondary">{skipAskCount}</span>}
         <span className="material-icons-outlined bg-transparent">account_circle</span>
       </div>
     </label>

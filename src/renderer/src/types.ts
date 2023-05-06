@@ -8,7 +8,6 @@ export type User = {
 
 export type UserInfo = Omit<User, 'password'> & { id: number; token: string }
 
-export type ItemId = 0 | 1
 export type UserStatus = 'online' | 'outline' | 'room' | 'gaming'
 
 export interface IBaseProps {
@@ -59,4 +58,5 @@ export type UserInRoom = Omit<UserInfo, 'status' | 'token'> & Pick<RoomItem, 'in
 export type RoomMsg = {
   type: 'asking' | 'join' | 'reject' | 'kickout' | 'quit'
   username: string
+  time: string
 }

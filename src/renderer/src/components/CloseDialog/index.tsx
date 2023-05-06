@@ -38,9 +38,6 @@ export const CloseDialog = () => {
       <span className="material-icons-outlined bg-transparent">close</span>
       {showDialog && (
         <Modal id={modalId}>
-          <label htmlFor={modalId} className="btn btn-sm btn-ghost absolute right-2 top-5">
-            <span className="material-icons-outlined bg-transparent">close</span>
-          </label>
           <h3 className="text-lg font-bold">退出确认</h3>
           <p className="py-4">你确定退出NoN程序吗？</p>
           <div className="modal-action w-full">
